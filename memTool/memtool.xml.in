@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Copyright (c) 2010 Krell Institute. All Rights Reserved.
+    
+This library is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free
+Software Foundation; either version 2.1 of the License, or (at your option)
+any later version.
+    
+This library is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+details.
+    
+You should have received a copy of the GNU Lesser General Public License
+along with this library; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<MRNet xmlns="http://www.krellinst.org/CBTF/MRNet.xsd">
+
+
+  <Type>memtool</Type>
+  <Version>1.0.0</Version>
+
+
+  <Stream>
+      <Name>ExeNameDownStream</Name>
+      <Tag>10000</Tag>
+  </Stream>
+
+  <Stream>
+      <Name>ValuesUpStream</Name>
+      <Tag>10001</Tag>
+  </Stream>
+
+  <Stream>
+      <Name>TerminateStream</Name>
+      <Tag>10002</Tag>
+  </Stream>
+
+  <Input>
+      <Name>ToolArgs</Name>
+      <To><Input>tool_args</Input></To>
+  </Input>
+
+  <Frontend>
+    <Network>
+      <Type>memtool_Frontend</Type>
+      <Version>1.0.0</Version>
+
+      <SearchPath>@@contriblib_location@@</SearchPath>
+      <Plugin>memTool.so</Plugin>
+
+      <Component>
+        <Name>MemView</Name>
+        <Type>MemView</Type>
+      </Component>
+
+      <Component>
+        <Name>MemFE</Name>
+        <Type>MemFE</Type>
+      </Component>
+
+      <Component>
+        <Name>EndCircut</Name>
+        <Type>EndCircutLogic</Type>
+      </Component>
+
+      <Component>
+        <Name>StartCircut</Name>
+        <Type>BeginCircutLogic</Type>
+      </Component>
+      <!--
+      -->
+
+<!--
+      <Output>
+         <Name>system_out</Name>
+         <From>
+             <Name>EndCircut</Name>
+             <Output>MemoryInfoOut</Output>
+         </From>
+      </Output>
+
+      <Output>
+         <Name>system_elapsed_time_out</Name>
+         <From>
+             <Name>EndCircut</Name>
+             <Output>ElapsedTimeOut</Output>
+         </From>
+      </Output>
+
+      <Output>
+          <Name>system_term_out</Name>
+          <From>
+              <Name>EndCircut</Name>
+              <Output>TerminateOut</Output>
+          </From>
+      </Output>
+
+      <Input>
+        <Name>system_freq_in</Name>
+        <To>
+          <Name>StartCircut</Name>
+          <Input>FrequencyIn</Input>
+        </To>
+      </Input>
+-->
+
+      <Input>
+        <Name>tool_args</Name>
+        <To>
+          <Name>MemFE</Name>
+          <Input>args</Input>
+        </To>
+      </Input>
+
+      <Input>
+        <Name>Terminate_In</Name>
+        <To>
+          <Name>EndCircut</Name>
+          <Input>TerminateIn</Input>
+        </To>
+      </Input>
+
+      <Input>
+        <Name>Frontend_In</Name>
+        <To>
+          <Name>EndCircut</Name>
+          <Input>MemoryInfoIn</Input>
+        </To>
+      </Input>
+
+      <Connection>
+        <From>
+            <Name>EndCircut</Name>
+            <Output>RestartOut</Output>
+        </From>
+        <To>
+            <Name>StartCircut</Name>
+            <Input>RestartIn</Input>
+        </To>
+      </Connection>
+
+<!--
+     handle arguments passed for this tool.
+-->
+      <Connection>
+        <From>
+            <Name>MemFE</Name>
+            <Output>FrequencyOut</Output>
+        </From>
+        <To>
+            <Name>StartCircut</Name>
+            <Input>FrequencyIn</Input>
+        </To>
+      </Connection>
+
+      <Connection>
+        <From>
+            <Name>MemFE</Name>
+            <Output>ExeNameOut</Output>
+        </From>
+        <To>
+            <Name>StartCircut</Name>
+            <Input>ExeNameIn</Input>
+        </To>
+      </Connection>
+
+      <Connection>
+        <From>
+            <Name>StartCircut</Name>
+            <Output>StartTimeOut</Output>
+        </From>
+        <To>
+            <Name>EndCircut</Name>
+            <Input>StartTimeIn</Input>
+        </To>
+      </Connection>
+
+<!--
+     values to view.
+-->
+      <Connection>
+        <From>
+             <Name>EndCircut</Name>
+             <Output>MemoryInfoOut</Output>
+        </From>
+        <To>
+            <Name>MemView</Name>
+            <Input>ResultVecIn</Input>
+        </To>
+      </Connection>
+
+      <Connection>
+        <From>
+             <Name>EndCircut</Name>
+             <Output>ElapsedTimeOut</Output>
+        </From>
+        <To>
+            <Name>MemView</Name>
+            <Input>ElapsedTimeIn</Input>
+        </To>
+      </Connection>
+
+      <Output>
+         <Name>Frontend_ExeNameOut</Name>
+         <From>
+             <Name>StartCircut</Name>
+             <Output>ExeNameOut</Output>
+         </From>
+      </Output>
+
+    </Network>
+
+    <IncomingUpstream>
+      <Name>ValuesUpStream</Name>
+      <To><Input>Frontend_In</Input></To>
+    </IncomingUpstream>
+
+    <IncomingUpstream>
+      <Name>TerminateStream</Name>
+      <To><Input>Terminate_In</Input></To>
+    </IncomingUpstream>
+
+    <OutgoingDownstream>
+        <Name>ExeNameDownStream</Name>
+        <From><Output>Frontend_ExeNameOut</Output></From>
+    </OutgoingDownstream>
+
+  </Frontend>
+
+  <Backend>
+    <Network>
+      <Type>memtool_Backend</Type>
+      <Version>1.0.0</Version>
+      <SearchPath>@@contriblib_location@@</SearchPath>
+      <Plugin>memTool.so</Plugin>
+
+      <Component>
+        <Name>getPID</Name>
+        <Type>getPID</Type>
+      </Component>
+
+      <Component>
+        <Name>getMemInfo</Name>
+        <Type>getMemInfo</Type>
+      </Component>
+
+      <Input>
+        <Name>Backend_ExeNameIn</Name>
+        <To>
+          <Name>getPID</Name>
+          <Input>ExeNameIn</Input>
+        </To>
+      </Input>
+
+      <Output>
+        <Name>BackendValues_Output</Name>
+        <From>
+          <Name>getMemInfo</Name>
+          <Output>MemInfoOut</Output>
+        </From>
+      </Output>
+
+      <Output>
+          <Name>Terminate_Signal</Name>
+          <From>
+              <Name>getPID</Name>
+              <Output>TerminateOut</Output>
+          </From>
+      </Output>
+
+      <Connection>
+        <From>
+          <Name>getPID</Name>
+          <Output>PidVecOut</Output>
+        </From>
+        <To>
+          <Name>getMemInfo</Name>
+          <Input>PidVecIn</Input>
+        </To>
+      </Connection>
+
+    </Network>
+
+    <IncomingDownstream> 
+      <Name>ExeNameDownStream</Name>
+      <To><Input>Backend_ExeNameIn</Input></To>
+    </IncomingDownstream>
+    
+    <OutgoingUpstream>
+      <Name>ValuesUpStream</Name>
+      <From><Output>BackendValues_Output</Output></From>
+    </OutgoingUpstream>
+
+    <OutgoingUpstream>
+        <Name>TerminateStream</Name>
+        <From><Output>Terminate_Signal</Output></From>
+    </OutgoingUpstream>
+
+  </Backend>
+
+</MRNet>
