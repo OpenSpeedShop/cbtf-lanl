@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2012 Krell Institute. All Rights Reserved.
+# Copyright (c) 2013 Krell Institute. All Rights Reserved.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -17,7 +17,7 @@
 ################################################################################
 
 AC_INIT([contrib], [1.0])
-AC_COPYRIGHT([[Copyright (c) 2012 Krell Institute. All Rights Reserved.]])
+AC_COPYRIGHT([[Copyright (c) 2013 Krell Institute. All Rights Reserved.]])
 
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
@@ -25,7 +25,7 @@ AM_CONFIG_HEADER([config.h])
 
 AH_TOP([
 /*******************************************************************************
-** Copyright (c) 2012 Krell Institute. All Rights Reserved.
+** Copyright (c) 2013 Krell Institute. All Rights Reserved.
 **
 ** This library is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU Lesser General Public License as published by the Free
@@ -75,7 +75,8 @@ case "$host" in
         if test x"$libdir" == x'${exec_prefix}/lib64'; then
             libdir='${exec_prefix}/lib'
         fi
-        LDFLAGS="-L/usr/lib -DLIB_DIR=lib $LDFLAGS"
+	LDFLAGS="-DLIB_DIR=lib $LDFLAGS"
+
         ;;
     powerpc64-*-*)
 
@@ -87,7 +88,7 @@ case "$host" in
                 if test x"$libdir" == x'${exec_prefix}/lib'; then
                     libdir='${exec_prefix}/lib64'
                 fi
-                LDFLAGS="-L/usr/lib64 -DLIB_DIR=lib64 $LDFLAGS"
+		LDFLAGS="-DLIB_DIR=lib64 $LDFLAGS"
                 CFLAGS="-m64 $CFLAGS"
                 CXXFLAGS="-m64 $CXXFLAGS"
                 CPPFLAGS="-m64 $CPPFLAGS"
@@ -98,7 +99,7 @@ case "$host" in
                 if test x"$libdir" == x'${exec_prefix}/lib64'; then
                     libdir='${exec_prefix}/lib'
                 fi
-                LDFLAGS="-L/usr/lib -DLIB_DIR=lib $LDFLAGS"
+		LDFLAGS="-DLIB_DIR=lib $LDFLAGS"
         fi
         ;;
 
@@ -109,14 +110,14 @@ case "$host" in
         fi
         abi_libdir="lib64"
         alt_abi_libdir="lib"
-        LDFLAGS="-L/usr/lib64 $LDFLAGS"
+	LDFLAGS="-DLIB_DIR=lib64 $LDFLAGS"
         ;;
 
     *)
         AC_MSG_CHECKING([Configuring for default host])
         abi_libdir="lib"
         alt_abi_libdir="lib64"
-        LDFLAGS="-L/usr/lib -DLIB_DIR=lib $LDFLAGS"
+	LDFLAGS="-DLIB_DIR=lib $LDFLAGS"
         ;;
 esac
 topdir_execprefix=${exec_prefix}
@@ -237,9 +238,9 @@ fi
 
 AX_CBTF()
 AX_CBTF_XML()
-AX_CBTF_MRNET()
 AX_CBTF_CORE()
 AX_MRNET()
+AX_CBTF_MRNET()
 
 fi
 
