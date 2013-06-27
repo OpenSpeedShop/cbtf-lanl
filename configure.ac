@@ -271,6 +271,7 @@ fi
 AC_CONFIG_FILES([
     Makefile
     memTool/Makefile
+    psTool/Makefile
 ])
 
 AC_OUTPUT
