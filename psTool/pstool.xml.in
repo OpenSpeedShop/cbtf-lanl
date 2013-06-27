@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Copyright (c) 2010 Krell Institute. All Rights Reserved.
+    
+This library is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free
+Software Foundation; either version 2.1 of the License, or (at your option)
+any later version.
+    
+This library is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+details.
+    
+You should have received a copy of the GNU Lesser General Public License
+along with this library; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<MRNet xmlns="http://www.krellinst.org/CBTF/MRNet.xsd">
+
+
+  <Type>pstool</Type>
+  <Version>1.0.0</Version>
+
+
+  <Stream>
+      <Name>DownwardStringStream</Name>
+      <Tag>10000</Tag>
+  </Stream>
+
+  <Stream>
+      <Name>ValuesUpStream</Name>
+      <Tag>10001</Tag>
+  </Stream>
+
+  <Stream>
+      <Name>TerminateStream</Name>
+      <Tag>10002</Tag>
+  </Stream>
+
+  <Input>
+      <Name>ToolArgs</Name>
+      <To><Input>tool_args</Input></To>
+  </Input>
+
+  <Frontend>
+    <Network>
+      <Type>pstool_Frontend</Type>
+      <Version>1.0.0</Version>
+
+      <SearchPath>@@contriblib_location@@</SearchPath>
+      <Plugin>mrnetPlugin.so</Plugin>
+      <Plugin>psPlugin.so</Plugin>
+
+      <Component>
+        <Name>psView</Name>
+        <Type>psView</Type>
+      </Component>
+
+      <Component>
+        <Name>psFE</Name>
+        <Type>psFE</Type>
+      </Component>
+
+<!--
+      <Output>
+         <Name>psViewfinished</Name>
+         <From>
+             <Name>psView</Name>
+             <Output>finished</Output>
+         </From>
+      </Output>
+-->
+
+      <Output>
+         <Name>Downward_Frontend_Out</Name>
+         <From>
+             <Name>psFE</Name>
+             <Output>stringout</Output>
+         </From>
+      </Output>
+
+      <Input>
+        <Name>tool_args</Name>
+        <To>
+          <Name>psFE</Name>
+          <Input>args</Input>
+        </To>
+      </Input>
+
+      <Input>
+        <Name>Upward_Frontend_InSame</Name>
+        <To>
+          <Name>psView</Name>
+          <Input>sameVecIn</Input>
+        </To>
+      </Input>
+
+      <Input>
+        <Name>Upward_Frontend_InDiff</Name>
+        <To>
+          <Name>psView</Name>
+          <Input>diffVecIn</Input>
+        </To>
+      </Input>
+
+<!--
+      <Input>
+        <Name>Terminate_In</Name>
+        <To>
+          <Name>psFE</Name>
+          <Input>TerminateIn</Input>
+        </To>
+      </Input>
+-->
+
+      <Connection>
+        <From>
+            <Name>psView</Name>
+            <Output>finished</Output>
+        </From>
+        <To>
+            <Name>psFE</Name>
+            <Input>TerminateIn</Input>
+        </To>
+      </Connection>
+
+    </Network>
+
+    <IncomingUpstream>
+      <Name>UpwardStreamSame</Name>
+      <To><Input>Upward_Frontend_InSame</Input></To>
+    </IncomingUpstream>
+
+    <IncomingUpstream>
+      <Name>UpwardStreamDiff</Name>
+      <To><Input>Upward_Frontend_InDiff</Input></To>
+    </IncomingUpstream>
+
+    <OutgoingDownstream>
+        <Name>DownwardStringStream</Name>
+        <From><Output>Downward_Frontend_Out</Output></From>
+    </OutgoingDownstream>
+
+  </Frontend>
+
+  <Filter>
+    <Depth>
+	<Expression> cp:top </Expression>
+    </Depth>
+
+    <Network>
+      <Type>psTool_Filter</Type>
+      <Version>1.0.0</Version>
+      <SearchPath>@@contriblib_location@@</SearchPath>
+      <Plugin>psPlugin.so</Plugin>
+      <Plugin>mrnetPlugin.so</Plugin>
+
+      <Component>
+        <Name>filterSame</Name>
+        <Type>psSame</Type>
+      </Component>
+
+      <Component>
+        <Name>filterDiff</Name>
+        <Type>psDiff</Type>
+      </Component>
+
+      <Input>
+        <Name>Filter_In</Name>
+        <To>
+          <Name>filterSame</Name>
+          <Input>in</Input>
+        </To>
+      </Input>
+
+      <Input>
+        <Name>Filter_In_Diff</Name>
+        <To>
+          <Name>filterDiff</Name>
+          <Input>in</Input>
+        </To>
+      </Input>
+
+      <Output>
+        <Name>Filter_OutSame</Name>
+        <From>
+          <Name>filterSame</Name>
+          <Output>out</Output>
+        </From>
+      </Output>
+
+      <Output>
+        <Name>Filter_OutDiff</Name>
+        <From>
+          <Name>filterDiff</Name>
+          <Output>out</Output>
+        </From>
+      </Output>
+
+    </Network>
+
+<!-- stream from backend -->
+    <IncomingUpstream>
+      <Name>UpwardStream</Name>
+      <To><Input>Filter_In</Input></To>
+    </IncomingUpstream>
+
+    <IncomingUpstream>
+      <Name>UpwardStream</Name>
+      <To><Input>Filter_In_Diff</Input></To>
+    </IncomingUpstream>
+
+<!-- stream to frontend -->    
+    <OutgoingUpstream>
+      <Name>UpwardStreamSame</Name>
+      <From><Output>Filter_OutSame</Output></From>
+    </OutgoingUpstream>
+
+    <OutgoingUpstream>
+      <Name>UpwardStreamDiff</Name>
+      <From><Output>Filter_OutDiff</Output></From>
+    </OutgoingUpstream>
+
+  </Filter> 
+
+  <Backend>
+    <Network>
+      <Type>psTool_Backend</Type>
+      <Version>1.0.0</Version>
+      <SearchPath>@@contriblib_location@@</SearchPath>
+      <Plugin>psPlugin.so</Plugin>
+      <Plugin>mrnetPlugin.so</Plugin>
+
+      <Component>
+        <Name>psCmd</Name>
+        <Type>psCmd</Type>
+      </Component>
+
+      <Input>
+        <Name>Backend_In</Name>
+        <To>
+          <Name>psCmd</Name>
+          <Input>in</Input>
+        </To>
+      </Input>
+
+      <Output>
+        <Name>Backend_Output</Name>
+        <From>
+          <Name>psCmd</Name>
+          <Output>out</Output>
+        </From>
+      </Output>
+
+    </Network>
+
+    <IncomingDownstream> 
+      <Name>DownwardStringStream</Name>
+      <To><Input>Backend_In</Input></To>
+    </IncomingDownstream>
+    
+    <OutgoingUpstream>
+      <Name>UpwardStream</Name>
+      <From><Output>Backend_Output</Output></From>
+    </OutgoingUpstream>
+
+  </Backend>
+
+</MRNet>

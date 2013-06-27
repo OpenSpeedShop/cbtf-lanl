@@ -1,0 +1,10 @@
+psTool - a tool to run the ps command on backends then compare the output and
+         tell the user what procs are running on all backends and what nodes are
+         running unique procs.
+
+You must have one at least filter node and 1 backend node.
+
+run psTool with the cbtf client daemonTool.
+
+daemonTool --tool "path/pstool.xml" --numBE n
+where numBE is at most the number of nodes in your allocation.
