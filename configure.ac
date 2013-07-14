@@ -135,7 +135,7 @@ AC_SUBST(cbtf_hardware_platform)
 
 
 ################################################################################
-# Target O/S Specification
+# Begin Target O/S Specification
 ################################################################################
 
 target_os=$host
@@ -214,13 +214,14 @@ esac
 
 AC_SUBST(BUILD_TARGETED)
 AC_SUBST(TARGET_OS)
+################################################################################
+# End Target O/S Specification
+################################################################################
 
 ################################################################################
 # Check for Additional Packages
 ################################################################################
 
-
-if test "$build_targeted" = 0 ; then
 
 AX_BOOST_BASE([1.35.0])
 AX_BOOST_DATE_TIME()
@@ -241,32 +242,6 @@ AX_CBTF_XML()
 AX_CBTF_CORE()
 AX_MRNET()
 AX_CBTF_MRNET()
-
-fi
-
-if test "$build_targeted" = 0 ; then
-AC_PKG_TARGET_MRNET()
-AC_PKG_TARGET_BOOST()
-AC_PKG_TARGET_BOOST_SYSTEM()
-AC_PKG_TARGET_BOOST_FILESYSTEM()
-AC_PKG_TARGET_BOOST_THREAD()
-AC_PKG_TARGET_BOOST_PROGRAM_OPTIONS()
-
-AC_PKG_TARGET_XERCESC()
-# This helps with targeted builds when there is no xercesc
-if test "$TARGET_LIBXERCES_C_LIBS" = "-lxerces-c" ; then
-  AX_TARGET_XERCESC_VERSION()
-fi
-
-AX_TARGET_DYNINST()
-AX_TARGET_MESSAGES()
-AX_TARGET_CBTF_SERVICES()
-
-AX_TARGET_CBTF()
-AX_TARGET_CBTF_XML()
-
-AX_TARGET_CBTF_MRNET()
-fi
 
 AC_CONFIG_FILES([
     Makefile
