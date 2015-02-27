@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2012-2013 Krell Institute. All Rights Reserved.
+# Copyright (c) 2012-2015 Krell Institute. All Rights Reserved.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -30,11 +30,13 @@ psPlugin_la_SOURCES = psPlugin.cpp
 
 psPlugin_la_CXXFLAGS = \
 	@BOOST_CPPFLAGS@ \
+	@CORE_CPPFLAGS@ \
 	@CBTF_CPPFLAGS@
 
 psPlugin_la_LDFLAGS = \
 	-L$(top_srcdir) \
 	-module -avoid-version -shared \
+        @CORE_LDFLAGS@ \
 	@CBTF_LDFLAGS@
 
 psPlugin_la_LIBADD = \
@@ -45,12 +47,14 @@ mrnetPlugin_la_SOURCES = mrnetPlugin.cpp
 
 mrnetPlugin_la_CXXFLAGS = \
 	@BOOST_CPPFLAGS@ \
+	@CORE_CPPFLAGS@ \
 	@CBTF_CPPFLAGS@ \
 	@MRNET_CPPFLAGS@
 
 mrnetPlugin_la_LDFLAGS = \
         -L$(top_srcdir) \
 	-module -avoid-version -shared \
+        @CORE_LDFLAGS@ \
         @CBTF_LDFLAGS@ \
 	@MRNET_LDFLAGS@
 
