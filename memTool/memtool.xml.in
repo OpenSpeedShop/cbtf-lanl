@@ -3,7 +3,7 @@
 <!--
 LACC #:  LA-CC-13-051
 Copyright (c) 2013 Michael Mason; HPC-3, LANL
-Copyright (c) 2013 Krell Institute. All Rights Reserved.
+Copyright (c) 2013-2015 Krell Institute. All Rights Reserved.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -51,7 +51,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       <Type>memtool_Frontend</Type>
       <Version>1.0.0</Version>
 
-      <SearchPath>@@contriblib_location@@</SearchPath>
+      <SearchPath>@contriblib_location@</SearchPath>
       <Plugin>memTool.so</Plugin>
 
       <Component>
@@ -237,7 +237,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <Network>
       <Type>memtool_Backend</Type>
       <Version>1.0.0</Version>
-      <SearchPath>@@contriblib_location@@</SearchPath>
+      <SearchPath>@contriblib_location@</SearchPath>
       <Plugin>memTool.so</Plugin>
 
       <Component>
